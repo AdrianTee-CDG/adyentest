@@ -14,20 +14,7 @@
        crossorigin="anonymous">
 </head>
 <body>
-    <div id="customCard-container">
-      <label>
-          <span>Card number:</span>
-          <span data-cse="encryptedCardNumber"></span>
-      </label>
-      <label>
-          <span>Expiry date:</span>
-          <span data-cse="encryptedExpiryDate"></span>
-      </label>
-      <label>
-          <span>CVV/CVC:</span>
-          <span data-cse="encryptedSecurityCode"></span>
-      </label>
-  </div>
+    <div id="card-container"></div>
 <script type="text/javascript">
   function handleOnChange(state, component) {
     console.log("handleOnChange");
@@ -73,17 +60,7 @@
             }
         },
         // Events
-        onChange: function() {},
-        onValid : function() {},
-        onLoad: function() {},
-        onConfigSuccess: function() {},
-        onFieldValid : function() {},
-        onBrand: function() {},
-        onError: function() {},
-        onFocus: function() {},
-        onBinValue: function(bin) {},
-        onBinLookup: function(callbackObj) {}
-    }).mount('#customCard-container');
+    }).mount('#card-container');
   }
 
   function startadyen() {
