@@ -30,27 +30,17 @@
         locale: "en_US",
         environment: "test",
         clientKey: "test_PALRIIX2FRADZNZNIE4BKDVL3IWYOSXS", // ngp testing key
-        onChange: handleOnChange
+        onChange: handleOnChange,
+        paymentMethodsConfiguration: {
+  			card: {
+  				hasHolderName: true,
+  				holderNameRequired: true
+  				}
+  			},
     };
     const checkout = await AdyenCheckout(configuration);
 
-    const customCard = checkout.create('securedfields', {
-        // Optional configuration
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-        styles: {
-            error: {
-                color: 'red'
-            },
-            validated: {
-                color: 'green'
-            },
-            placeholder: {
-                color: '#d8d8d8'
-            }
-        },
-        // Events
-    }).mount('#card-container');
+    const cardComponent = checkout.create('card').mount('#card-container');
   }
 
   function startadyen() {
