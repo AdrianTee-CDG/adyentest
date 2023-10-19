@@ -1,59 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.51.0/adyen.js"
-       integrity="sha384-FJWX32BY0zx3KKed9gdiWxoEAEsA3uh1ixchmdkflgtcDo+SoYg5ZD6uqvDmnafO"
-       crossorigin="anonymous"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+		.row {
+			margin-bottom: 10px;
+		}
+		.row label {
+			width: 170px;
+			display: inline-block;
+		}
+	</style>
+	<script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.51.0/adyen.js"
+		 integrity="sha384-FJWX32BY0zx3KKed9gdiWxoEAEsA3uh1ixchmdkflgtcDo+SoYg5ZD6uqvDmnafO"
+		 crossorigin="anonymous"></script>
 
-  <link rel="stylesheet"
-       href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.51.0/adyen.css"
-       integrity="sha384-k6qYnmoHaucEm97eQQAs3MK5e44JQ2sksrue2tfdDOnnedKzc0VYQwxzdYWZu8Mj"
-       crossorigin="anonymous">
+	<link rel="stylesheet"
+		 href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.51.0/adyen.css"
+		 integrity="sha384-k6qYnmoHaucEm97eQQAs3MK5e44JQ2sksrue2tfdDOnnedKzc0VYQwxzdYWZu8Mj"
+		 crossorigin="anonymous">
 </head>
 <body>
-    <div id="card-container"></div>
-<script type="text/javascript">
-  function handleOnChange(state, component) {
-    console.log("handleOnChange");
-     // True or false. Specifies if all the information that the shopper provided is valid.
-    console.log("state.isValid", state.isValid);
-    console.log("state.data ", state.data);
-    component // Provides the active component instance that called this event.
-  }
 
-  async function startcheckout() {
-   
-    const configuration = {
-        locale: "en_US",
-        environment: "test",
-        clientKey: "test_PALRIIX2FRADZNZNIE4BKDVL3IWYOSXS", // ngp testing key
-        onChange: handleOnChange,
-        paymentMethodsConfiguration: {
-  			card: {
-  				hasHolderName: true,
-  				holderNameRequired: true
-  				}
-  			},
-    };
-    const checkout = await AdyenCheckout(configuration);
+	<div id="card-container"></div>
 
-    const cardComponent = checkout.create('card').mount('#card-container');
-  }
+	<div class="row">
+		<label>encryptedCardNumber</label>
+		<input id="eCN" type="" name="" size="100">
+	</div>
+	<div class="row">
+		<label>encryptedExpiryMonth</label>
+		<input id="eEM" type="" name="" size="100">
+	</div>
+	<div class="row">
+		<label>encryptedExpiryYear</label>
+		<input id="eEY" type="" name="" size="100">
+	</div>
+	<div class="row">
+		<label>encryptedSecurityCode</label>
+		<input id="eSC" type="" name="" size="100">
+	</div>
 
-  function startadyen() {
+	<script type="text/javascript">
+		// Need to deploy to web host for whitelisting to work
+		function handleOnChange(state, component) {
+			console.log("handleOnChange");
+			// console.log("state.isValid", state.isValid);
+			if(state.data.paymentMethod){
+				console.log("state.data ", state.data.paymentMethod);
+				document.getElementById("eCN").setAttribute('value', state.data.paymentMethod.encryptedCardNumber); 
+				document.getElementById("eEM").setAttribute('value', state.data.paymentMethod.encryptedExpiryMonth); 
+				document.getElementById("eEY").setAttribute('value', state.data.paymentMethod.encryptedExpiryYear); 
+				document.getElementById("eSC").setAttribute('value', state.data.paymentMethod.encryptedSecurityCode); 
+			}
+		}
+		function handleError(error, component){
+			console.error(error.name, error.message, error.stack, component);
+		}
 
-    startcheckout().then(res=>{
-      console.log("done loading");
-    });
-    
-  }
+		async function startcheckout() {
+		
+			const configuration = {
+			locale: "en_US",
+			environment: "test",
+			clientKey: "test_US5XJBS6IZASDENAKTDK4KIBVEAG7T72", 
+			onChange: handleOnChange,
+			onError: handleError,
+			// Events
+			// onChange: function() {},
+			// onValid : function() {},
+			// onLoad: function() {},
+			// onConfigSuccess: function() {},
+			// onFieldValid : function() {},
+			// onBrand: function() {},
+			// onError: function() {},
+			// onFocus: function() {},
+			// onBinValue: function(bin) {},
+			// onBinLookup: function(callbackObj) {}
+			paymentMethodsConfiguration: {
+				card: {
+					hasHolderName: true,
+					holderNameRequired: true
+				}
+			}
+			};
+			const checkout = await AdyenCheckout(configuration);
 
-  startadyen();
-    
+			const cardComponent = checkout.create('card').mount('#card-container');
+		}
 
-</script>
+		function startadyen() {
+
+			startcheckout().then(res=>{
+				console.log("done loading");
+			});
+			 
+		}
+
+		startadyen();
+
+	</script>
 </body>
 </html>
